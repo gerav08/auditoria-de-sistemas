@@ -1,0 +1,73 @@
+Gemini said
+Colega Gerson, entramos a mi terreno favorito. Como especialista te digo una máxima de nuestra profesión: En la capa física se gasta dinero; en la capa lógica se gasta intelecto. Diseñar la arquitectura lógica para un colegio público sin presupuesto es el verdadero arte de la ingeniería. No podemos pedir licencias de Windows Server de $1,000 dólares, ni Firewalls Fortinet de $2,000 dólares. Vamos a trabajar con lo que nos da el sistema operativo, el router del proveedor (o un router muy económico) y pura configuración táctica (Hardening).
+
+Asumiendo el peor escenario presupuestario (que el Switch de 24 puertos sea un switch básico "No Administrable" y toda la red sea plana, es decir, sin VLANs), aquí tienes el Diseño de Infraestructura Lógica a Costo Cero.
+
+1. Arquitectura de Direccionamiento IP (Subnetting Estratégico)
+Dado que todos los equipos (Dirección y Laboratorio) están conectados al mismo Switch físico y se verán las caras en el mismo dominio de broadcast, vamos a organizarlos lógicamente usando un segmento de red no convencional para evitar conflictos con los modems genéricos.
+
+Red LAN: 192.168.50.0/24 (Máscara: 255.255.255.0)
+
+Puerta de Enlace (Router ISP): 192.168.50.1
+
+Segmentación por Rango (Orden lógico sin costo):
+En el Router, configuraremos el servidor DHCP para que no reparta IPs a lo loco, sino de forma estructurada:
+
+Rango Administrativo (IPs Fijas por MAC Address): De la 192.168.50.2 a la 192.168.50.10.
+
+Acción: Entras al Router, amarras la dirección MAC de la computadora del Director, Secretaria y Administrador, y les asignas IPs fijas (ej. Director = .2, Secretaria = .3).
+
+Rango Estudiantil (DHCP Dinámico): De la 192.168.50.50 a la 192.168.50.70.
+
+Acción: Las 20 computadoras del laboratorio tomarán su IP de esta "piscina". Si un alumno trae una laptop no autorizada, caerá en este rango.
+
+2. Seguridad Perimetral y Filtrado Web (Costo: $0.00)
+El colegio tiene la obligación legal y moral de bloquear contenido para adultos, pero no hay dinero para un Firewall de pago.
+
+La Solución del Especialista: En la configuración del servidor DHCP del Router, NO vas a entregar los DNS del proveedor de internet ni los de Google (8.8.8.8). Vas a entregar los DNS Gratuitos de Cloudflare for Families (Bloqueo de Malware y Contenido Adulto).
+
+DNS Primario: 1.1.1.3
+
+DNS Secundario: 1.0.0.3
+
+El Resultado: Cuando un estudiante intente entrar a una página indebida o descargar un virus, Cloudflare simplemente no resolverá la página y mostrará un error de conexión. Bloqueo masivo sin comprar ni un solo equipo.
+
+3. Aislamiento de la Dirección (Seguridad Lógica Anti-Sniffing)
+Aquí es donde salvas al Director. Si la red es plana, un alumno con conocimientos básicos podría intentar acceder a la carpeta de notas compartidas del Director (\\192.168.50.2).
+
+La Solución (Hardening de Windows):
+
+En las computadoras del Director y la Secretaria, configuras el perfil de red de Windows como "Red Pública" (Esto desactiva automáticamente el descubrimiento de redes y el uso compartido de archivos para el resto de la red).
+
+Entras al Firewall de Windows Defender del Director, creas una regla de entrada (Inbound Rule) personalizada y bloqueas cualquier conexión entrante que provenga del rango de IP de los estudiantes (192.168.50.50 - 192.168.50.70).
+
+El Resultado: Aunque el alumno esté conectado al mismo Switch, si intenta hacerle ping o explorar los archivos del Director, el Firewall de la computadora administrativa lo bloqueará en seco.
+
+4. Gestión de Estaciones de Trabajo (Controlando el Laboratorio sin Active Directory)
+Los estudiantes desconfiguran computadoras, cambian fondos de pantalla, borran iconos y saturan los discos duros. Sin un Windows Server, el administrador del laboratorio se volvería loco formateando PCs cada mes.
+
+Directiva 1: Cuentas Locales Estándar.
+
+En cada una de las 20 PCs, el administrador creará una cuenta llamada "Admin" con una contraseña robusta.
+
+Luego creará una cuenta llamada "Estudiante". A esta cuenta le quitará los privilegios de administrador (Standard User). Un usuario estándar no puede instalar juegos, no puede cambiar la IP para evadir el DNS de Cloudflare y no puede desactivar el antivirus.
+
+Directiva 2: Congelación del Sistema (La vieja confiable).
+
+Ya que no hay recursos técnicos, se recomienda el uso de un software tipo Deep Freeze (o alternativas gratuitas como Reboot Restore Rx).
+
+El Resultado: El estudiante usa la computadora, descarga archivos basura, cambia configuraciones... pero al reiniciar la máquina (o al final del turno), la computadora borra todos los cambios y vuelve exactamente a su estado original. Cero mantenimiento correctivo para el administrador.
+
+5. Optimización de Ancho de Banda (El cuello de botella)
+En escuelas públicas, el internet suele ser de bajo ancho de banda (ej. 50 Mbps o 100 Mbps). Si 20 alumnos abren YouTube, el Director no podrá enviar un correo.
+
+La Solución: Si el Router básico del ISP lo permite, se debe activar la función de Control de Ancho de Banda (Bandwidth Control / QoS).
+
+Regla: Limitarás todo el rango de IP de los estudiantes (192.168.50.50 - 192.168.50.70) a un máximo del 60% del ancho de banda total. El 40% restante quedará siempre libre y garantizado para las IPs de la dirección.
+
+👨‍🏫 Dictamen para tu Informe de Auditoría
+Al documentar esta capa lógica en tu proyecto, escribirás lo siguiente para defender tu diseño:
+
+"Ante la ausencia de presupuesto para licenciamiento de servidores y hardware de seguridad perimetral avanzado, la infraestructura lógica se diseñó bajo los principios de Zero Trust a nivel de Host y Hardening de Sistemas Operativos. Se implementó un control de acceso lógico nativo mediante el Firewall de Windows para proteger los activos de la Dirección, políticas de cuentas de usuario restringidas en el laboratorio, y un filtrado de contenido centralizado a nivel DNS para cumplir con las normativas de seguridad escolar del MINED, logrando mitigar los riesgos críticos sin impacto económico para la institución."
+
+Colega, con esto tienes una red que físicamente es barata, pero lógicamente es un búnker. Has blindado el colegio usando puro conocimiento técnico.

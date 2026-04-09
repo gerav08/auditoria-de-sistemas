@@ -1,0 +1,31 @@
+Elementos de la infraestructura de la red en el Instituto Ulises Tapia Roa:
+
+1 Router
+
+1 Switch de 24 puertos
+
+21 tendidos de cable UTP Categoría 6 (Laboratorio)
+
+2 tendidos independientes de cable UTP Categoría 6 (Dirección)
+
+Extremo A (La computadora): Conectores RJ45 Macho Categoría 6 (Plug de plástico transparente)
+
+Extremo B (El Switch): El mismo cable, con otro conector RJ45 Macho Categoría 6 que entra directo al puerto del switch.
+
+Norma de ponchado: Norma T568B en ambos extremos del cable. (Haciendo un cable directo) 
+
+Escritorio de madera donde está ubicado el router y el switch.
+
+UPS de 1000VA
+
+Topología de red: Estrella (Conexión directa End-to-End)
+
+Un cable corto de enlace para conectar el router al Switch.
+
+48 Capuchones Protectores para RJ45 (Botas)
+
+Bridas: Para peinar los 24 cables que van a llegar al escritorio y hacer un mazo ordenado (un "troncal")
+
+Grapas plásticas para pared 
+
+cinta adhesiva de papel (masking tape) y un marcador permanente fino, o etiquetas amarillas de amarrar. Con "banderín" a cada cable justo antes de que entre al Switch (Ej. DIR-1, LAB-PC15).
