@@ -1,7 +1,5 @@
-Gemini said
-Colega Gerson, entramos a mi terreno favorito. Como especialista te digo una máxima de nuestra profesión: En la capa física se gasta dinero; en la capa lógica se gasta intelecto. Diseñar la arquitectura lógica para un colegio público sin presupuesto es el verdadero arte de la ingeniería. No podemos pedir licencias de Windows Server de $1,000 dólares, ni Firewalls Fortinet de $2,000 dólares. Vamos a trabajar con lo que nos da el sistema operativo, el router del proveedor (o un router muy económico) y pura configuración táctica (Hardening).
 
-Asumiendo el peor escenario presupuestario (que el Switch de 24 puertos sea un switch básico "No Administrable" y toda la red sea plana, es decir, sin VLANs), aquí tienes el Diseño de Infraestructura Lógica a Costo Cero.
+
 
 1. Arquitectura de Direccionamiento IP (Subnetting Estratégico)
 Dado que todos los equipos (Dirección y Laboratorio) están conectados al mismo Switch físico y se verán las caras en el mismo dominio de broadcast, vamos a organizarlos lógicamente usando un segmento de red no convencional para evitar conflictos con los modems genéricos.
@@ -64,10 +62,3 @@ En escuelas públicas, el internet suele ser de bajo ancho de banda (ej. 50 Mbps
 La Solución: Si el Router básico del ISP lo permite, se debe activar la función de Control de Ancho de Banda (Bandwidth Control / QoS).
 
 Regla: Limitarás todo el rango de IP de los estudiantes (192.168.50.50 - 192.168.50.70) a un máximo del 60% del ancho de banda total. El 40% restante quedará siempre libre y garantizado para las IPs de la dirección.
-
-👨‍🏫 Dictamen para tu Informe de Auditoría
-Al documentar esta capa lógica en tu proyecto, escribirás lo siguiente para defender tu diseño:
-
-"Ante la ausencia de presupuesto para licenciamiento de servidores y hardware de seguridad perimetral avanzado, la infraestructura lógica se diseñó bajo los principios de Zero Trust a nivel de Host y Hardening de Sistemas Operativos. Se implementó un control de acceso lógico nativo mediante el Firewall de Windows para proteger los activos de la Dirección, políticas de cuentas de usuario restringidas en el laboratorio, y un filtrado de contenido centralizado a nivel DNS para cumplir con las normativas de seguridad escolar del MINED, logrando mitigar los riesgos críticos sin impacto económico para la institución."
-
-Colega, con esto tienes una red que físicamente es barata, pero lógicamente es un búnker. Has blindado el colegio usando puro conocimiento técnico.
